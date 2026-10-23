@@ -1,0 +1,357 @@
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> ❤️❤️❤️❤️❤️❤️❤️❤️</title>
+</head>
+
+
+<style>
+    /* ===== GRUNDLAYOUT ===== */
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html, body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    body {
+        background-color: #ffe6f0;
+        font-family: Arial, sans-serif;
+        text-align: center;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        height: 100dvh;
+    }
+
+
+    /* ===== ÜBERSCHRIFT ===== */
+
+    h1 {
+        color: #ff3385;
+        font-size: 40px;
+        max-width: 90%;
+        margin: 20px 0;
+        overflow-wrap: break-word;
+    }
+
+
+    /* ===== BUTTONS ===== */
+
+    .button-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+
+        width: 100%;
+        padding: 10px;
+        position: relative;
+    }
+
+    button {
+        background-color: #ff66a3;
+        color: white;
+        border: none;
+        border-radius: 20px;
+
+        padding: 15px 30px;
+        font-size: 20px;
+        cursor: pointer;
+
+        margin: 0;
+    }
+
+    button:hover {
+        background-color: #ff3385;
+    }
+
+    #noButton {
+        max-width: min(85vw, 300px);
+        white-space: normal;
+        overflow-wrap: break-word;
+        touch-action: none;
+        transition: none;
+    }
+
+
+    .no-button-slot {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+
+
+    /* ===== HERZEXPLOSION ===== */
+
+    .heart {
+        position: fixed;
+        font-size: 30px;
+        pointer-events: none;
+
+        animation: heartExplosion 1.5s ease-out forwards;
+    }
+
+    @keyframes heartExplosion {
+        0% {
+            transform: translate(0, 0) scale(0);
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translate(var(--x), var(--y)) scale(1.5);
+            opacity: 0;
+        }
+    }
+
+
+    /* ===== SMARTPHONE ===== */
+
+    @media (max-width: 600px) {
+
+        h1 {
+            font-size: 28px;
+            max-width: 90%;
+            margin: 15px 0;
+        }
+
+        .button-container {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 12px 18px;
+        }
+
+        #noButton {
+            max-width: 85vw;
+        }
+    }
+
+</style>
+
+
+
+<body>
+
+    <h1 id="title">ICH LIEBE DICH AM MEEIIIISTEN!!! ❤️❤️❤️</h1>
+
+
+    <div class="button-container">
+        <button id="yesButton">Okeee... ❤️</button>
+
+        <div class="no-button-slot">
+            <button id="noButton">Nö, Ich liebe DICH meeeehr! 😈</button>
+        </div>
+    </div>
+
+
+
+<script>
+
+    const yesButton = document.getElementById("yesButton");
+    const noButton = document.getElementById("noButton");
+    const title = document.getElementById("title");
+
+    const messages = [
+        "NÖÖÖÖ! 😈",
+        "ICH LIEBE DICH MEEEHR!!! ❤️",
+        "Majaaa, erwisch mich doch! 😝",
+        "Zu langsam! 🏃💨",
+        "HEHEHEHE 🤭",
+        "Du kriegst mich niiiicht! 😜",
+        "MEINE LIEBE IST GRÖSSER!!! 💕",
+        "HÖR AUF MICH ZU JAGEN!!! 😭",
+        "Okay, okay... NÖÖÖÖ! 😈",
+        "ICH GEB NICHT AUF!!! ❤️"
+    ];
+
+    let escapeCount = 0;
+    let isMoving = false;
+
+
+    // ===== BUTTON INITIALISIEREN =====
+
+
+    function initializeButton() {
+        const rect = noButton.getBoundingClientRect();
+        const slot = document.querySelector(".no-button-slot");
+
+        // Platz für den Button reservieren
+        slot.style.width = rect.width + "px";
+        slot.style.height = rect.height + "px";
+
+        // Button aus dem Layout lösen
+        noButton.style.position = "fixed";
+        noButton.style.left = rect.left + "px";
+        noButton.style.top = rect.top + "px";
+
+        // Animation nach der Initialisierung aktivieren
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                noButton.style.transition =
+                    "left 0.3s ease-out, top 0.3s ease-out";
+            });
+        });
+    }
+
+
+    initializeButton();
+
+
+    // ===== FLUCHTFUNKTION =====
+
+    function runAway() {
+        if (isMoving) return;
+
+        isMoving = true;
+
+        // Neuen Spruch auswählen
+        noButton.textContent = messages[escapeCount % messages.length];
+        escapeCount++;
+
+        const margin = 12;
+
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        const buttonWidth = noButton.offsetWidth;
+        const buttonHeight = noButton.offsetHeight;
+
+        const maxX = Math.max(margin, width - buttonWidth - margin);
+        const maxY = Math.max(margin, height - buttonHeight - margin);
+
+        const rect = noButton.getBoundingClientRect();
+
+        const currentX = rect.left;
+        const currentY = rect.top;
+
+        const minDistance = Math.min(
+            250,
+            Math.min(width, height) * 0.4
+        );
+
+        let bestX = currentX;
+        let bestY = currentY;
+        let bestDistance = -1;
+
+        for (let i = 0; i < 100; i++) {
+            const x = margin + Math.random() * (maxX - margin);
+            const y = margin + Math.random() * (maxY - margin);
+
+            const distance = Math.hypot(
+                x - currentX,
+                y - currentY
+            );
+
+            if (distance > bestDistance) {
+                bestDistance = distance;
+                bestX = x;
+                bestY = y;
+            }
+
+            if (distance >= minDistance) {
+                break;
+            }
+        }
+
+        noButton.style.left = bestX + "px";
+        noButton.style.top = bestY + "px";
+
+        // Nach der Animation darf der Button erneut flüchten
+        setTimeout(() => {
+            isMoving = false;
+        }, 350);
+    }
+
+
+    // ===== SIEGESANIMATION =====
+
+    function celebrate() {
+        title.textContent = "ICH HAB GEWONNEN!!! 😈❤️";
+
+        yesButton.style.display = "none";
+        noButton.style.display = "none";
+
+        heartExplosion();
+    }
+
+
+    // ===== HERZEXPLOSION =====
+
+    function heartExplosion() {
+        const numberOfHearts = 500;
+
+        for (let i = 0; i < numberOfHearts; i++) {
+            setTimeout(() => {
+                const heart = document.createElement("div");
+
+                heart.classList.add("heart");
+                heart.textContent = "❤️";
+
+                heart.style.left = window.innerWidth / 2 + "px";
+                heart.style.top = window.innerHeight / 2 + "px";
+
+                const angle = Math.random() * 2 * Math.PI;
+                const radius = 150 + Math.random() * 350;
+
+                const x = Math.cos(angle) * radius;
+                const y = Math.sin(angle) * radius;
+
+                heart.style.setProperty("--x", x + "px");
+                heart.style.setProperty("--y", y + "px");
+
+                document.body.appendChild(heart);
+
+                heart.addEventListener("animationend", () => {
+                    heart.remove();
+                });
+
+            }, i * 5);
+        }
+    }
+
+
+    // ===== EVENT LISTENER =====
+
+    // Desktop
+    noButton.addEventListener("mouseenter", (event) => {
+        if (event.pointerType !== "touch") {
+            runAway();
+        }
+    });
+
+    // Smartphone
+    noButton.addEventListener("touchstart", (event) => {
+        event.preventDefault();
+        runAway();
+    }, { passive: false });
+
+    // Ja-Button
+    yesButton.addEventListener("click", celebrate);
+
+
+</script>
+
+</body>
+</html>
